@@ -1,0 +1,88 @@
+.full-height {
+  height: 100%;
+  font-size: xx-large;
+}
+
+.row {
+  box-sizing: border-box;
+  border: 1px solid gainsboro;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+  cursor: pointer;
+  /* icon size dictates this */
+  height: 100px;
+}
+
+.row:hover {
+  border-color: var(--link-color);
+}
+
+.location {
+  font-size: larger;
+  margin-left: 0;
+}
+
+@media only screen and (min-width: 576px) {
+  .location {
+    margin-left: 1rem;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .location {
+    font-size: x-large;
+    margin-left: 2rem;
+  }
+}
+
+.location .name, .current h4 {
+  text-align: center;
+  font-weight: normal;
+}
+
+.location .name {
+  /* font-size: x-large; */
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-right: 1rem;
+}
+
+
+.icon img {
+  filter: drop-shadow(1px 1px 1px #222);
+}
+
+.current {
+  margin-right: 0;
+}
+
+/* @media only screen and (min-width: 576px) {
+  .current {
+    margin-right: 1rem;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .current {
+    margin-right: 2rem;
+  }
+} */
+
+.current .average, .current .main {
+  white-space: nowrap;
+}
+
+.current .average {
+  font-size: xx-large;
+  font-weight: 300;
+}
+
+.current .main {
+  font-size: larger;
+  text-transform: lowercase;
+  margin: 0 .7rem;
+}
+
+.fas {
+  margin-right: .2rem;
+}

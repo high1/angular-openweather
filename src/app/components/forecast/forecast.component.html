@@ -1,0 +1,36 @@
+<ng-container *ngIf="(forecast$ | async).loading; else contentBlock">
+  <div class="container full-height d-flex align-items-center justify-content-center">
+    <div class="fa-3x">
+      <i class="fas fa-sync fa-spin"></i>
+    </div>
+  </div>
+</ng-container>
+<ng-template #contentBlock>
+  <div class="container d-flex flex-column">
+    <div class="header row d-flex justify-content-between">
+      <a class="left" routerLink="/">
+        <i class="fas fa-chevron-left"></i>
+      </a>
+      <p class="middle">
+        {{(name$ | async)?.toUpperCase()}}
+      </p>
+      <i class="side right fas fa-backward"></i>
+    </div>
+    <div class="content row justify-content-around overflow-auto" *ngIf="(forecast$ | async)?.forecast?.hourly as forecasts">
+      <div class="sub-container col-md-6 d-flex justify-content-center align-items-center"
+        *ngFor="let forecast of forecasts">
+        <div class="date d-flex flex-column justify-content-center align-items-start">
+          <span class="sup">{{getHour(forecast.dt)}}</span>
+          <span class="sub">{{getDayMonth(forecast.dt)}}</span>
+        </div>
+        <div class="temperature d-flex justify-content-start align-items-center">
+          <span>{{forecast.temp | number:'1.0-0'}}°</span>
+        </div>
+        <div class="description d-flex justify-content-start align-items-center">
+          <img src="https://openweathermap.org/img/wn/{{forecast.weather[0].icon}}.png" alt="current weather">
+          <span class="name">{{forecast.weather[0].description}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

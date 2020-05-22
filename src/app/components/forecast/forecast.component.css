@@ -1,0 +1,75 @@
+table > tbody > tr > td {
+  vertical-align: middle;
+}
+
+.header {
+  font-size: x-large;
+  font-weight: bold;
+  flex-shrink: 0;
+  height: 40px;
+  padding: 0 15px;
+}
+
+.header .left,
+.header .right,
+.subrow .temp {
+  flex-grow: 0;
+}
+
+.header .right {
+  color: transparent;
+}
+
+.content {
+  scrollbar-width: thin;
+}
+
+.container {
+  height: 100%;
+}
+
+.sub-container {
+  box-sizing: border-box;
+  border: 1px solid gainsboro;
+  border-radius: 5px;
+  margin: 1px 0;
+  height: 50px;
+}
+
+@media only screen and (min-width: 992px) {
+  .sub-container {
+    max-width: calc(50% - 2px);
+  }
+}
+
+.sub-container:nth-child(even) {
+  background-color: gainsboro;
+}
+
+.date {
+  flex-grow: 0;
+  flex-basis: 50px;
+}
+
+.date .sup {
+  font-weight: 500;
+}
+
+.date .sup,
+.date .sub {
+  white-space: nowrap;
+}
+
+.temperature {
+  font-size: x-large;
+  font-weight: 300;
+  flex-basis: 30px;
+}
+
+.description {
+  flex-grow: 1;
+}
+
+.description img {
+  filter: drop-shadow(1px 1px 1px #222);
+}
