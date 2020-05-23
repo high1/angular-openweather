@@ -47,7 +47,7 @@ describe('ForecastComponent', () => {
           },
         }
       ]
-    });
+    }).compileComponents();
     store = TestBed.inject(MockStore);
   }));
 
@@ -62,7 +62,7 @@ describe('ForecastComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should sholw loader when loading is true', () => {
+  it('should show loader when loading is true', () => {
     createFixture();
     const compiled = fixture.debugElement.nativeElement;
     expect(compiled.querySelector('app-loader')).not.toBeFalsy();

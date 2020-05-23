@@ -24,6 +24,7 @@ export class ForecastComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.id = +this.route.snapshot.paramMap.get('id');
+    console.warn(this.route.snapshot.paramMap.get('id'));
     this.coord$ = this.store.select(state => state.weather.current?.find(item => item.id === this.id).coord);
     this.name$ = this.store.select(state => state.weather.current?.find(item => item.id === this.id).name);
     this.subscription = this.coord$.subscribe(({ lat, lon }) => this.store.dispatch(loadForecast({ id: this.id, lat, lon })));

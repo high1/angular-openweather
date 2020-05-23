@@ -59,7 +59,7 @@ export interface WeatherState {
   error?: unknown;
 }
 
-export const initialState: WeatherState = { current: undefined, loading: false };
+const initialState: WeatherState = { current: undefined, loading: false };
 
 const weatherReducer = createReducer(
   initialState,
