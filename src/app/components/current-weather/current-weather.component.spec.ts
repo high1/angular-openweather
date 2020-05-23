@@ -1,5 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { CurrentWeatherComponent } from './current-weather.component';
 import { LoaderComponent } from '../loader/loader.component';
@@ -14,37 +15,63 @@ describe('CurrentWeatherComponent', () => {
     weather: {
       current: [{
         id: 1,
-        coord: {
-          lat: 1,
-          lon: 1,
-        },
-        name,
+        name
       }],
       loading: true,
     },
   };
 
+  const createFixture = () => {
+    fixture = TestBed.createComponent(CurrentWeatherComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  };
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ CurrentWeatherComponent, LoaderComponent ],
-      providers: [ provideMockStore({ initialState })]
+      providers: [
+        RouterTestingModule,
+        provideMockStore({ initialState })
+      ]
     })
     .compileComponents();
     store = TestBed.inject(MockStore);
   }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(CurrentWeatherComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
   it('should create', () => {
+    createFixture();
     expect(component).toBeTruthy();
   });
 
   it('should show loader when loading is true', () => {
+    createFixture();
     const compiled = fixture.debugElement.nativeElement;
     expect(compiled.querySelector('app-loader')).not.toBeFalsy();
+  });
+
+  it('should not show loader when loading is false', () => {
+    store.setState({
+      weather: {
+        current: [{
+          id: 1,
+          name,
+          weather: [{
+              icon: '01n.png',
+            }
+          ],
+          main : {
+            temp_avg: 20,
+          },
+          wind: {
+            speed: 5,
+          }
+        }],
+        loading: false,
+      },
+    });
+    createFixture();
+    const compiled = fixture.debugElement.nativeElement;
+    expect(compiled.querySelector('app-loader')).toBeFalsy();
   });
 });
