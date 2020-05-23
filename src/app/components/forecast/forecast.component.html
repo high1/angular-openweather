@@ -27,6 +27,9 @@
           <img src="https://openweathermap.org/img/wn/{{forecast.weather[0].icon}}.png" alt="current weather">
           <span class="name">{{forecast.weather[0].description}}</span>
         </div>
+        <div class="description d-flex justify-content-end align-items-center">
+          <span class="name">{{forecast.wind_speed | number:'1.1-1' }}<sup>m</sup>/<sub>s</sub></span>
+        </div>
       </div>
     </div>
   </div>

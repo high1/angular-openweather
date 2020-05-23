@@ -68,6 +68,7 @@ table > tbody > tr > td {
 
 .description {
   flex-grow: 1;
+  margin-left: 2rem;
 }
 
 .description img {
