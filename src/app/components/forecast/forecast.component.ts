@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
 
@@ -20,7 +20,7 @@ export class ForecastComponent implements OnInit, OnDestroy {
   forecast$: Observable<any>;
   subscription: Subscription;
 
-  constructor(private route: ActivatedRoute, private store: Store<State>, private router: Router) { }
+  constructor(private route: ActivatedRoute, private store: Store<State>) { }
 
   ngOnInit(): void {
     this.id = +this.route.snapshot.paramMap.get('id');

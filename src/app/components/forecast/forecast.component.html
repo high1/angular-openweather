@@ -1,9 +1,5 @@
 <ng-container *ngIf="(forecast$ | async).loading; else contentBlock">
-  <div class="container full-height d-flex align-items-center justify-content-center">
-    <div class="fa-3x">
-      <i class="fas fa-sync fa-spin"></i>
-    </div>
-  </div>
+  <app-loader></app-loader>
 </ng-container>
 <ng-template #contentBlock>
   <div class="container d-flex flex-column">
@@ -16,7 +12,8 @@
       </p>
       <i class="side right fas fa-backward"></i>
     </div>
-    <div class="content row justify-content-around overflow-auto" *ngIf="(forecast$ | async)?.forecast?.hourly as forecasts">
+    <div class="content row justify-content-around overflow-auto"
+      *ngIf="(forecast$ | async)?.forecast?.hourly as forecasts">
       <div class="sub-container col-md-6 d-flex justify-content-center align-items-center"
         *ngFor="let forecast of forecasts">
         <div class="date d-flex flex-column justify-content-center align-items-start">

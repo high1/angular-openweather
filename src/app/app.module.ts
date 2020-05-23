@@ -12,13 +12,15 @@ import { ForecastComponent } from './components/forecast/forecast.component';
 import { WeatherModule } from './store/weather/weather.module';
 import { ForecastModule } from './store/forecast/forecast.module';
 import { NotFoundComponent } from './components/not-found/not-found.component';
+import { LoaderComponent } from './components/loader/loader.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CurrentWeatherComponent,
     ForecastComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    LoaderComponent
   ],
   imports: [
     BrowserModule,

@@ -14,7 +14,7 @@ export class ForecastGuardService implements CanActivate {
   canActivate(routeSnapshot: ActivatedRouteSnapshot): boolean {
     const current = this.getState(this.store, state => state.weather.current);
     if (!current || !(current.some(curr => curr.id === +routeSnapshot.params.id))) {
-      this.router.navigate(['weather']);
+      this.router.navigate(['not-found']);
       return false;
     }
     return true;
