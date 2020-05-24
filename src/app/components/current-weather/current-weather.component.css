@@ -1,3 +1,7 @@
+.container {
+  height: 100%;
+  scrollbar-width: thin;
+}
 .row {
   box-sizing: border-box;
   border: 1px solid gainsboro;
@@ -49,18 +53,6 @@
 .current {
   margin-right: 0;
 }
-
-/* @media only screen and (min-width: 576px) {
-  .current {
-    margin-right: 1rem;
-  }
-}
-
-@media only screen and (min-width: 768px) {
-  .current {
-    margin-right: 2rem;
-  }
-} */
 
 .current .average, .current .main {
   white-space: nowrap;

@@ -1,22 +1,24 @@
-<ng-container *ngIf="(weather$ | async).loading; else contentBlock">
-  <app-loader></app-loader>
-</ng-container>
-<ng-template #contentBlock>
-  <ng-container *ngIf="(weather$ | async).current as list">
-    <div class="container">
-      <div class="row" *ngFor="let item of list" routerLink="/forecast/{{item.id}}">
-        <div class="location col d-flex align-items-center">
-          <span class="name">{{item.name}}</span>
-        </div>
-        <div class="icon col d-flex justify-content-center align-items-center">
-          <img src="https://openweathermap.org/img/wn/{{item.weather[0].icon}}@2x.png" alt="current weather">
-        </div>
-        <div class="current col d-flex justify-content-around align-items-center">
-          <span class="average">{{item.main.temp_avg | number:'1.0-0'}}°</span>
-          <span class="main"><i
-              class="fas fa-wind"></i>{{item.wind.speed | number:'1.1-1'}}<sup>m</sup>/<sub>s</sub></span>
+<ng-container *ngIf="(weather$ | async) as weather">
+  <app-loader *ngIf="weather.loading; else contentBlock"></app-loader>
+  <ng-template #contentBlock>
+    <ng-container *ngIf="weather.current as current">
+      <div class="container overflow-auto">
+        <div class="row" *ngFor="let item of current" routerLink="/forecast/{{item.id}}">
+          <div class="location col d-flex align-items-center">
+            <span class="name">{{item.name}}</span>
+          </div>
+          <div class="icon col d-flex justify-content-center align-items-center">
+            <img src="https://openweathermap.org/img/wn/{{item.weather[0].icon}}@2x.png" alt="current weather">
+          </div>
+          <div class="current col d-flex justify-content-around align-items-center">
+            <span class="average">{{item.main.temp_avg | number:'1.0-0'}}°</span>
+            <span class="main">
+              <i class="fas fa-wind"></i>
+              {{item.wind.speed | number:'1.1-1'}}<sup>m</sup>/<sub>s</sub>
+            </span>
+          </div>
         </div>
       </div>
-    </div>
-  </ng-container>
-</ng-template>
+    </ng-container>
+  </ng-template>
+</ng-container>

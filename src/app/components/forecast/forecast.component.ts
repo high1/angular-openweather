@@ -1,43 +1,29 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { State } from '../../store/state';
-import { Coord } from '../../store/weather/weather.reducer';
 import { loadForecast } from '../../store/forecast/forecast.actions';
-import { environment } from '../../../environments/environment';
+import { getState } from '../../store/util';
 
 @Component({
   selector: 'app-forecast',
   templateUrl: './forecast.component.html',
   styleUrls: ['./forecast.component.css']
 })
-export class ForecastComponent implements OnInit, OnDestroy {
-  id: number;
-  coord$: Observable<Coord>;
-  name$: Observable<string>;
+export class ForecastComponent implements OnInit {
+  name: string;
   forecast$: Observable<any>;
-  subscription: Subscription;
 
   constructor(private route: ActivatedRoute, private store: Store<State>) { }
 
   ngOnInit(): void {
-    this.id = +this.route.snapshot.paramMap.get('id');
-    console.warn(this.route.snapshot.paramMap.get('id'));
-    this.coord$ = this.store.select(state => state.weather.current?.find(item => item.id === this.id).coord);
-    this.name$ = this.store.select(state => state.weather.current?.find(item => item.id === this.id).name);
-    this.subscription = this.coord$.subscribe(({ lat, lon }) => this.store.dispatch(loadForecast({ id: this.id, lat, lon })));
-    this.forecast$ = this.store.select(state => ({ forecast: state.forecast[this.id], loading: state.forecast.loading }));
-    this.subscription.add(this.forecast$.subscribe(forecast => console.warn(forecast)));
-  }
-
-  get forecastLimit() {
-    return environment.forecastLimit;
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    const id = +this.route.snapshot.paramMap.get('id');
+    const { name, coord: { lat, lon } } = getState(this.store, state => state.weather.current.find(item => item.id === id));
+    this.name = name;
+    this.forecast$ = this.store.select(state => ({ forecast: state.forecast[id], loading: state.forecast.loading }));
+    this.store.dispatch(loadForecast({ id,  lat, lon }));
   }
 
   getHour = (unixTimeStamp: number) =>
