@@ -34,9 +34,7 @@ describe('WeatherService', () => {
     service.getCurrentWeather().subscribe();
 
     const req = httpMock.expectOne(
-      `${apiUrl}/group?id=${cities.join(
-        ','
-      )}&untis=metric&appid=${apiKey}`
+      `${apiUrl}/group?id=${cities.join(',')}&untis=metric&appid=${apiKey}`
     );
     expect(req.request.method).toBe('GET');
     httpMock.verify();
@@ -47,7 +45,7 @@ describe('WeatherService', () => {
     const lon = 20;
     service.getForecast({ lat, lon }).subscribe();
 
-    let req = httpMock.expectOne(
+    const req = httpMock.expectOne(
       `${apiUrl}/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,daily&units=metric&appid=${apiKey}`
     );
     expect(req.request.method).toBe('GET');
