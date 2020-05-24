@@ -1,4 +1,5 @@
 # AngularOpenWeather
+![CI](https://github.com/high1/angular-openweather/workflows/CI/badge.svg)
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.6.
 
