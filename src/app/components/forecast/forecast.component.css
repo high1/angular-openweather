@@ -10,13 +10,13 @@ table > tbody > tr > td {
   padding: 0 15px;
 }
 
-.header .left,
-.header .right,
+.header .back,
+.header .dummy,
 .subrow .temp {
   flex-grow: 0;
 }
 
-.header .right {
+.header .dummy {
   color: transparent;
 }
 
