@@ -56,10 +56,10 @@ export interface WeatherState {
   current: Weather[];
   fetchTime?: number;
   loading: boolean;
-  error?: unknown;
+  error?: boolean;
 }
 
-const initialState: WeatherState = { current: undefined, loading: false };
+export const initialState: WeatherState = { current: undefined, loading: false };
 
 const weatherReducer = createReducer(
   initialState,
@@ -67,18 +67,18 @@ const weatherReducer = createReducer(
     current,
     loading: true,
   })),
-  on(weatherLoaded, (_, response: Partial<WeatherResponse>) => ({
-    current: response.list,
+  on(weatherLoaded, (_, { list: current }) => ({
+    current,
     fetchTime: Date.now(),
     loading: false
   })),
-  on(weatherError, (_, error: Error) => ({
-    current: null,
-    loading: false,
-    error
-  }))
+  on(weatherError, () => ({
+      current: null,
+      loading: false,
+      error: true
+    }))
 );
 
-export function reducer(state: WeatherState, action: Action) {
+export function reducer(state: WeatherState, action: Action): WeatherState {
   return weatherReducer(state, action);
 }

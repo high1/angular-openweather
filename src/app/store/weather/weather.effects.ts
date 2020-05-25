@@ -12,34 +12,41 @@ import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class WeatherEffects {
+  loadingWeather$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(loadWeather),
+      concatMap(action => of(action).pipe(
+        withLatestFrom(this.store.select((state: State) => state.weather.fetchTime)),
+      )),
+      mergeMap(([{ reload }, fetchTime]) => this.shouldNotLoadWeather(fetchTime) && !reload ? of(noOp()) : of(loadingWeather())),
+    )
+  );
+
   loadWeather$ = createEffect(() =>
     this.actions$.pipe(
       ofType(loadWeather),
       concatMap(action => of(action).pipe(
         withLatestFrom(this.store.select((state: State) => state.weather.fetchTime)),
       )),
-      mergeMap(([{ reload }, fetchTime]) =>
-        fetchTime && (Date.now() - fetchTime <= environment.apiInterval) && !reload
-          ? of(noOp()) : this.getWeather),
-      catchError(error => of(weatherError(error)))
+      mergeMap(([{ reload }, fetchTime]) => this.shouldNotLoadWeather(fetchTime) && !reload
+        ? of(noOp()) : this.weatherService.getCurrentWeather()
+          .pipe(
+            map(({ list }: WeatherResponse) => weatherLoaded({
+              list: list.map(item => ({
+                ...item,
+                main: {
+                  ...item.main,
+                  temp_avg: (item.main.temp_max + item.main.temp_min) / 2 - 273.15,
+                },
+              }))
+            })),
+            catchError(() => of(weatherError()))
+          )
+      )
     )
   );
 
-  getWeather = concat(
-    of(loadingWeather()),
-    this.weatherService.getCurrentWeather()
-      .pipe(
-        map(({ list }: WeatherResponse) => weatherLoaded({
-          list: list.map(item => ({
-            ...item,
-            main: {
-              ...item.main,
-              temp_avg: (item.main.temp_max + item.main.temp_min) / 2 - 273.15,
-            },
-          }))
-        }))
-      )
-  );
+  shouldNotLoadWeather = (fetchTime: number) => fetchTime && (Date.now() - fetchTime <= environment.apiInterval);
 
   constructor(
     private actions$: Actions,
