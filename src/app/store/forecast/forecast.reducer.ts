@@ -2,7 +2,6 @@ import { Action, createReducer, on } from '@ngrx/store';
 
 import { forecastLoaded, forecastError, loadingForecast } from './forecast.actions';
 import { WeatherDescription } from '../weather/weather.reducer';
-import { environment } from '../../../environments/environment';
 
 export const key = 'forecast';
 
@@ -28,29 +27,28 @@ export interface ForecastResponse {
   hourly: Forecast[];
 }
 
-export interface ForecastState extends Record<number, { fetchTime: number } & Forecast[]> {
+export interface ForecastState extends Record<number, { error?: boolean, fetchTime?: number, hourly: Forecast[] }> {
   loading: boolean;
-  error?: unknown;
 }
 
-const initialState: any = { current: undefined, loading: false };
+export const initialState: any = { loading: false };
 
 const forecastReducer = createReducer(
   initialState,
-  on(forecastLoaded, (state, { id, hourly }: ForecastResponse) => ({
+  on(forecastLoaded, (state, { id, hourly }: Partial<ForecastResponse>) => ({
     ...state,
     loading: false,
     [id]: {
-      hourly: hourly.slice(0, environment.forecastLimit || Number.MAX_VALUE),
+      hourly,
       fetchTime: Date.now()
     }
   })),
-  on(forecastError, (state, { id, error }) => ({
+  on(forecastError, (state, { id }) => ({
     ...state,
     loading: false,
     [id]: {
       hourly: null,
-      error
+      error: true
     }
   })),
   on(loadingForecast, (state) => ({
@@ -59,6 +57,6 @@ const forecastReducer = createReducer(
   }))
 );
 
-export function reducer(state: any, action: Action) {
+export function reducer(state: any, action: Action): ForecastState {
   return forecastReducer(state, action);
 }

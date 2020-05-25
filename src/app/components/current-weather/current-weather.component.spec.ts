@@ -4,6 +4,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { CurrentWeatherComponent } from './current-weather.component';
 import { LoaderComponent } from '../loader/loader.component';
+import { ErrorComponent } from '../error/error.component';
 import { loadWeather } from '../../store/weather/weather.actions';
 
 describe('CurrentWeatherComponent', () => {
@@ -30,7 +31,7 @@ describe('CurrentWeatherComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CurrentWeatherComponent, LoaderComponent ],
+      declarations: [ CurrentWeatherComponent, LoaderComponent, ErrorComponent ],
       providers: [
         RouterTestingModule,
         provideMockStore({ initialState })

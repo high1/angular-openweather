@@ -3,6 +3,7 @@ import { take } from 'rxjs/operators';
 
 import { State } from '../store/state';
 
+// Utility function to get the current state when needed
 export const getState = <T>(store: Store<State>, selector: (s: State) => T): T => {
   let state: T;
 

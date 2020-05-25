@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { concat, of } from 'rxjs';
-import { map, mergeMap, catchError, concatMap, withLatestFrom } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { map, mergeMap, catchError, concatMap, switchMap, withLatestFrom } from 'rxjs/operators';
 
 import { loadForecast, forecastLoaded, forecastError, loadingForecast } from './forecast.actions';
 import { noOp } from '../weather/weather.actions';
@@ -20,29 +20,41 @@ export class ForecastEffects {
     private store: Store,
   ) { }
 
+  loadingForecast$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(loadForecast),
+      concatMap(action => of(action).pipe(
+        withLatestFrom(this.store.select((state: State) => state.forecast[action.id].fetchTime)),
+      )),
+      mergeMap(([{ reload }, fetchTime]) =>
+        !reload && this.shouldNotLoadForecast(fetchTime)
+          ? of(noOp()) : of(loadingForecast())
+      )
+    )
+  );
+
   loadForecast$ = createEffect(() =>
     this.actions$.pipe(
       ofType(loadForecast),
       concatMap(action => of(action).pipe(
-        withLatestFrom(this.store.select((state: State) => state.forecast[action.id]?.fetchTime)),
+        withLatestFrom(this.store.select((state: State) => state.forecast[action.id].fetchTime)),
       )),
-      mergeMap(([{ id, lat, lon, reload }, fetchTime]) =>
-        !reload && fetchTime && Date.now() - fetchTime <= environment.apiInterval
-          ? of(noOp()) : this.getForecast(id, lat, lon))
+      switchMap(([{ id, lat, lon, reload }, fetchTime]) =>
+        !reload && this.shouldNotLoadForecast(fetchTime)
+          ? of(noOp()) : this.weatherService.getForecast({ lat, lon }).pipe(
+          map((forecast: ForecastResponse) => {
+            console.warn(forecast);
+            return forecastLoaded({ ...forecast });
+          }),
+          catchError(error => {
+            console.error(error);
+            return of(forecastError({ id }));
+            }
+          )
+        )
+      ), catchError(() => of(forecastError({ id: 0 })))
     )
   );
 
-  getForecast = (id: number, lat: number, lon: number) =>
-  concat(
-    of(loadingForecast()),
-    this.weatherService.getForecast({ lat, lon })
-    .pipe(
-      map((forecast: ForecastResponse) => {
-        console.warn(forecast);
-        return forecastLoaded({ ...forecast, id });
-      }),
-      catchError(error => of(forecastError(error))
-      )
-    )
-  )
+  shouldNotLoadForecast = (fetchTime: number) => fetchTime && Date.now() - fetchTime <= environment.apiInterval;
 }

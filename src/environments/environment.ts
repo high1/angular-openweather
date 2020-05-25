@@ -22,8 +22,7 @@ export const environment = {
       3117735,
       // Moscow
       524901
-  ],
-  forecastLimit: 48
+  ]
 };
 
 /*
