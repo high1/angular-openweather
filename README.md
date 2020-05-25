@@ -50,6 +50,7 @@ components to pure presentational layer, containg no bussiness logic and side ef
 - created WeatherService for API calls
 - installed @ngrx/store and @ngrx/effects
 - created actions, reducers and effects that will handle all the side effects of calling the external API and updating the state when the response or error is received
+- installed [Bootstrap](https://getbootstrap.com/) and [Font Awesome](https://fontawesome.com/)
 - created components which contain only presentation logic, CurrentWeather and Forecast for the presentation of the weather
 - created ForecastGuardService, which does not allow route activation if the current state does not contain the appropriate ID in the forecast state
 - created reusable app-loader component to show that the component is loading the data

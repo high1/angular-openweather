@@ -24,7 +24,7 @@ export class ForecastEffects {
     this.actions$.pipe(
       ofType(loadForecast),
       concatMap(action => of(action).pipe(
-        withLatestFrom(this.store.select((state: State) => state.forecast[action.id].fetchTime)),
+        withLatestFrom(this.store.select((state: State) => state.forecast[action.id]?.fetchTime)),
       )),
       mergeMap(([{ reload }, fetchTime]) =>
         !reload && this.shouldNotLoadForecast(fetchTime)
@@ -37,7 +37,7 @@ export class ForecastEffects {
     this.actions$.pipe(
       ofType(loadForecast),
       concatMap(action => of(action).pipe(
-        withLatestFrom(this.store.select((state: State) => state.forecast[action.id].fetchTime)),
+        withLatestFrom(this.store.select((state: State) => state.forecast[action.id]?.fetchTime)),
       )),
       switchMap(([{ id, lat, lon, reload }, fetchTime]) =>
         !reload && this.shouldNotLoadForecast(fetchTime)
