@@ -86,7 +86,7 @@ describe('CurrentWeatherComponent', () => {
     });
     createFixture();
     const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('.container.error')).toBeTruthy();
+    expect(compiled.querySelector('app-error')).toBeTruthy();
   });
 
   it('should dispatch on loadWeather with false payload', () => {

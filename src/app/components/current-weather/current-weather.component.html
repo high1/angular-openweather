@@ -22,6 +22,7 @@
     </ng-container>
   </ng-template>
   <ng-template #errorBlock>
-    <div class="error container d-flex justify-content-center align-items-center">Something has gone wrong... Please try to&nbsp;<a routerLink="" (click)="loadWeather(true)">reload</a>.</div>
+    <app-error (reload)="loadWeather(true)"></app-error>
+    <!-- <div class="error container d-flex justify-content-center align-items-center">Something has gone wrong... Please try to&nbsp;<a routerLink="" (click)="loadWeather(true)">reload</a>.</div> -->
   </ng-template>
 </ng-container>

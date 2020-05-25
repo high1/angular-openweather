@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { State } from '../../store/state';
 import { loadForecast } from '../../store/forecast/forecast.actions';
 import { getState } from '../../store/util';
+import { Coord } from 'src/app/store/weather/weather.reducer';
 
 @Component({
   selector: 'app-forecast',
@@ -14,16 +15,22 @@ import { getState } from '../../store/util';
 })
 export class ForecastComponent implements OnInit {
   name: string;
+  id: number;
+  coord: Coord;
   forecast$: Observable<any>;
 
   constructor(private route: ActivatedRoute, private store: Store<State>) { }
 
   ngOnInit(): void {
-    const id = +this.route.snapshot.paramMap.get('id');
-    const { name, coord: { lat, lon } } = getState(this.store, state => state.weather.current.find(item => item.id === id));
-    this.name = name;
-    this.forecast$ = this.store.select(state => ({ forecast: state.forecast[id], loading: state.forecast.loading }));
-    this.store.dispatch(loadForecast({ id,  lat, lon }));
+    this.id = +this.route.snapshot.paramMap.get('id');
+    ({ name: this.name , coord: this.coord } = getState(this.store, state => state.weather.current.find(item => item.id === this.id)));
+    this.forecast$ = this.store.select(state => ({ forecast: state.forecast[this.id], loading: state.forecast.loading }));
+    this.loadForecast();
+  }
+
+  loadForecast(reload = false) {
+    const { lat, lon } = this.coord;
+    this.store.dispatch(loadForecast({ id: this.id, lat, lon, reload }));
   }
 
   getHour = (unixTimeStamp: number) =>

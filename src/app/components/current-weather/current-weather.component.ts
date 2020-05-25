@@ -19,7 +19,7 @@ export class CurrentWeatherComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    loadWeather();
+    this.loadWeather();
   }
 
   loadWeather(reload = false) {
