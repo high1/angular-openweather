@@ -1,13 +1,15 @@
+![CI](https://github.com/high1/angular-openweather/workflows/CI/badge.svg)
+
 # Application Structure
 
 The application structure tries to follow the **fractal** guidelines, where functionality is grouped primarily by feature rather than file type, while adhering to the angular defaults as much as possible at the same time.
 
 ```
 └── src                 # Application source code
- 	├── app  		    # Default angular setup
-	│	├── components  # This folder contains all the components and their unit tests, components are bare presentation layers
- 	│   ├── services    # All the generated services should be placed here, along with their tests - i.e. services that call external APIs, or route guards
- 	│	└── store       # This folder represents the reactive state of the application, containing the reactive state, actions, effects and reducers
+ 	  └── app  		        # Default angular setup
+        ├── components  # This folder contains all the components and their unit tests, components are bare presentation layers
+ 	      ├── services    # All the generated services should be placed here, along with their tests - i.e. services that call external APIs, or route guards
+ 	      └── store       # This folder represents the reactive state of the application, containing the reactive state, actions, effects and reducers
 	...
 ```
 
@@ -55,7 +57,7 @@ components to pure presentational layer, containg no bussiness logic and side ef
 - created ForecastGuardService, which does not allow route activation if the current state does not contain the appropriate ID in the forecast state
 - created reusable app-loader component to show that the component is loading the data
 - added an apiInterval as a configurable option, the application uses this to avoid constantly calling the API, instead calling the API on the preconfigured 5 minutes interval
-- since the state already contains the data, the applciation just displays it on revisits of the components during the API call pause interval
+- since the state already contains the data, the application just displays it on revisits of the components during the API call pause interval
 - added a reusable error component which is displayed in the case of an error, and has the link which just calls again the same call that failed before, but forcing refetch this time
 - covered application with unit tests
 - created an application hosting repo on [Firebase](https://firebase.google.com/)
