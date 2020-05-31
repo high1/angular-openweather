@@ -4,7 +4,7 @@ import { LOAD_FORECAST, LOADING_FORECAST, FORECAST_LOADED, FORECAST_ERROR,
 describe('noOp', () => {
 
   it('should create a loadWeather action with payload', () => {
-    const payload = { id: 1, lat: 1, lon: 1, reload: true };
+    const payload = { id: 1, reload: true };
     expect(loadForecast(payload)).toEqual({ type: LOAD_FORECAST, ...payload });
   });
 
