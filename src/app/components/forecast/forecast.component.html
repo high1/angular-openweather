@@ -7,7 +7,7 @@
           <i class="fas fa-chevron-left"></i>
         </a>
         <p class="name">
-          {{name.toUpperCase()}}
+          {{(name$ | async).toUpperCase()}}
         </p>
         <i class="dummy fas fa-backward"></i>
       </div>

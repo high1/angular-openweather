@@ -24,7 +24,8 @@ export class ForecastEffects {
     this.actions$.pipe(
       ofType(loadForecast),
       concatMap(action => of(action).pipe(
-        withLatestFrom(this.store.select((state: State) => state.forecast[action.id]?.fetchTime)),
+        withLatestFrom(this.store.select((state: State) => state.forecast[action.id]?.fetchTime)
+        ),
       )),
       mergeMap(([{ reload }, fetchTime]) =>
         !reload && this.shouldNotLoadForecast(fetchTime)
@@ -37,9 +38,12 @@ export class ForecastEffects {
     this.actions$.pipe(
       ofType(loadForecast),
       concatMap(action => of(action).pipe(
-        withLatestFrom(this.store.select((state: State) => state.forecast[action.id]?.fetchTime)),
+        withLatestFrom(this.store.select((state: State) => ({
+          fetchTime: state.forecast[action.id]?.fetchTime,
+          ...state.weather.current.find(item => item.id === action.id).coord
+        }))),
       )),
-      switchMap(([{ id, lat, lon, reload }, fetchTime]) =>
+      switchMap(([{ id, reload }, { fetchTime, lat, lon }]) =>
         !reload && this.shouldNotLoadForecast(fetchTime)
           ? of(noOp()) : this.weatherService.getForecast({ lat, lon }).pipe(
           map((forecast: ForecastResponse) => forecastLoaded({ ...forecast, id })),

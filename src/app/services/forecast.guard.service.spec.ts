@@ -2,9 +2,10 @@ import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
 import { NgZone } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, UrlTree } from '@angular/router';
 
 import { ForecastGuardService } from './forecast.guard.service';
+import { cold } from 'jasmine-marbles';
 
 describe('ForecastGuardService', () => {
   let service: ForecastGuardService;
@@ -44,9 +45,9 @@ describe('ForecastGuardService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should return false if there is no matching id in the store', () => {
-    expect(service.canActivate(route.snapshot)).toEqual(false);
-  });
+  it('should return false if there is no matching id in the store', () =>
+    expect(service.canActivate(route.snapshot)).toBeObservable(cold('b', { b: router.parseUrl('not-found') }))
+  );
 
   it('should return true if there is a matching id in the store', () => {
     store.setState({
@@ -56,6 +57,6 @@ describe('ForecastGuardService', () => {
           ]
         }
       });
-    expect(service.canActivate(route.snapshot)).toEqual(true);
+    expect(service.canActivate(route.snapshot)).toBeObservable(cold('b', { b: true }));
   });
 });

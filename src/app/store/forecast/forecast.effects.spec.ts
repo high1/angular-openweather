@@ -55,7 +55,7 @@ describe('Forecast Effects', () => {
         }
       }
     });
-    action$ = hot('-a', { a: loadForecast({ id: 1, lat: 1, lon: 1 }) });
+    action$ = hot('-a', { a: loadForecast({ id: 1 }) });
 
     expect(effects.loadingForecast$).toBeObservable(cold('-b', { b: noOp() }));
   });
@@ -63,6 +63,17 @@ describe('Forecast Effects', () => {
   it('loadForecast effect should also dispatch noOp for interval smaller than predefined one', () => {
     store.setState({
       ...initialState,
+      weather: {
+        current: [
+          {
+            id: 1,
+            coord: {
+              lat: 1,
+              lon: 1
+            }
+          }
+        ]
+      },
       forecast: {
         ...initialState.forecast,
         1: {
@@ -70,7 +81,7 @@ describe('Forecast Effects', () => {
         }
       }
     });
-    action$ = hot('-a', { a: loadForecast({ id: 1, lat: 1, lon: 1 }) });
+    action$ = hot('-a', { a: loadForecast({ id: 1 }) });
 
     expect(effects.loadForecast$).toBeObservable(cold('-b', { b: noOp() }));
   });
@@ -85,7 +96,7 @@ describe('Forecast Effects', () => {
         }
       }
     });
-    action$ = hot('-a', { a: loadForecast({ id: 1, lat: 1, lon: 1 }) });
+    action$ = hot('-a', { a: loadForecast({ id: 1 }) });
 
     expect(effects.loadingForecast$).toBeObservable(cold('-b', { b: loadingForecast() }));
   });
@@ -100,6 +111,17 @@ describe('Forecast Effects', () => {
     }));
     store.setState({
       ...initialState,
+      weather: {
+        current: [
+          {
+            id: 1,
+            coord: {
+              lat: 1,
+              lon: 1
+            }
+          }
+        ]
+      },
       forecast: {
         ...initialState.forecast,
         1: {
@@ -107,7 +129,7 @@ describe('Forecast Effects', () => {
         }
       }
     });
-    action$ = hot('-a', { a: loadForecast({ id: 1, lat: 1, lon: 1 }) });
+    action$ = hot('-a', { a: loadForecast({ id: 1 }) });
     const expected = hot('-b', {
       b: forecastLoaded({
         id: 1,
