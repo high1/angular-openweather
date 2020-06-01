@@ -15,7 +15,7 @@ describe('Weather Effects', () => {
   let action$: Observable<Action>;
   let effects: WeatherEffects;
   let store: MockStore;
-  let weatherServiceSpy: WeatherService;
+  let weatherServiceSpy: jasmine.SpyObj<WeatherService>;
   let scheduler: TestScheduler;
 
   const initialState = {
@@ -29,10 +29,12 @@ describe('Weather Effects', () => {
   };
 
   beforeEach(async () => {
+    weatherServiceSpy = jasmine.createSpyObj('WeatherService', ['getCurrentWeather']);
     TestBed.configureTestingModule({
       imports: [ HttpClientTestingModule ],
       providers: [
         WeatherEffects,
+        { provide: WeatherService, useValue: weatherServiceSpy },
         provideMockActions(() => action$),
         provideMockStore({ initialState })
       ]
@@ -47,8 +49,8 @@ describe('Weather Effects', () => {
   beforeEach(() => {
     const baseTime = new Date(2020, 1, 1);
     jasmine.clock().mockDate(baseTime);
-    weatherServiceSpy = TestBed.inject(WeatherService);
-    weatherServiceSpy.getCurrentWeather = jasmine.createSpy().and.returnValue(of({ cnt: 0, list: [] }));
+    // weatherServiceSpy = TestBed.inject(WeatherService);
+    weatherServiceSpy.getCurrentWeather.and.returnValue(of({ cnt: 0, list: [] }));
   });
 
   it('loadingWeather effect should dispatch noOp for interval smaller than predefined one', () => {
@@ -126,7 +128,7 @@ describe('Weather Effects', () => {
   });
 
   it('should dispatch weatherError', () => {
-    weatherServiceSpy.getCurrentWeather = jasmine.createSpy().and.returnValue(of({
+    weatherServiceSpy.getCurrentWeather.and.returnValue(of({
       cnt: 1,
       list: [{
         id: 1

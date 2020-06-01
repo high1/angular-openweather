@@ -11,13 +11,12 @@ import { loadForecast, loadingForecast, forecastLoaded, forecastError } from './
 import { noOp } from '../weather/weather.actions';
 import { Action } from '@ngrx/store';
 import { environment } from '../../../environments/environment';
-import { act } from '@ngrx/effects';
 
 describe('Forecast Effects', () => {
   let action$: Observable<Action>;
   let effects: ForecastEffects;
   let store: MockStore;
-  let weatherServiceSpy: WeatherService;
+  let weatherServiceSpy: jasmine.SpyObj<WeatherService>;
   let scheduler: TestScheduler;
 
   const initialState = {
@@ -29,10 +28,12 @@ describe('Forecast Effects', () => {
   const baseTime = new Date(2020, 1, 1);
 
   beforeEach(async () => {
+    weatherServiceSpy = jasmine.createSpyObj('WeatherService', ['getForecast']);
     TestBed.configureTestingModule({
       imports: [ HttpClientTestingModule ],
       providers: [
         ForecastEffects,
+        { provide: WeatherService, useValue: weatherServiceSpy },
         provideMockActions(() => action$),
         provideMockStore({ initialState })
       ]
@@ -46,8 +47,6 @@ describe('Forecast Effects', () => {
 
   beforeEach(() => {
     jasmine.clock().mockDate(baseTime);
-    weatherServiceSpy = TestBed.inject(WeatherService);
-    weatherServiceSpy.getCurrentWeather = jasmine.createSpy().and.returnValue(of({ cnt: 0, list: [] }));
   });
 
   it('loadingForecast effect should dispatch noOp for interval smaller than predefined one', () => {
@@ -91,6 +90,7 @@ describe('Forecast Effects', () => {
       action$ = cold('--a', { a: loadForecast({ id: 1 }) });
       expectObservable(effects.loadForecast$).toBe('--b', { b: noOp() });
     });
+    expect(weatherServiceSpy.getForecast).not.toHaveBeenCalled();
   });
 
   it('should dispatch loadingForecast', () => {
@@ -110,7 +110,7 @@ describe('Forecast Effects', () => {
   });
 
   it('should dispatch forecastLoaded with appropriate service response', () => {
-    weatherServiceSpy.getForecast = jasmine.createSpy().and.returnValue(of({
+    weatherServiceSpy.getForecast.and.returnValue(of({
       id: 1,
       hourly: [{
         dt: baseTime.getTime(),
@@ -149,7 +149,14 @@ describe('Forecast Effects', () => {
         } as unknown)
       });
     });
+    expect(weatherServiceSpy.getForecast).toHaveBeenCalled();
   });
 
-  // TODO: marble error tests with rxjs/testing or other framework
+  it('should dispatch loadingForecast', () => {
+    weatherServiceSpy.getForecast.and.throwError('');
+    scheduler.run(({ cold, expectObservable }) => {
+      action$ = cold('-a', { a: loadForecast({ id: 1 }) });
+      expectObservable(effects.loadForecast$).toBe('-(b|)', { b: forecastError({ id: 0 }) });
+    });
+  });
 });

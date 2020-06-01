@@ -46,11 +46,11 @@ export class ForecastEffects {
       switchMap(([{ id, reload }, { fetchTime, lat, lon }]) =>
         !reload && this.shouldNotLoadForecast(fetchTime)
           ? of(noOp()) : this.weatherService.getForecast({ lat, lon }).pipe(
-          map((forecast: ForecastResponse) => forecastLoaded({ ...forecast, id })),
-          catchError(() => of(forecastError({ id }))
+            map((forecast: ForecastResponse) => forecastLoaded({ ...forecast, id })),
+            catchError(() => of(forecastError({ id })))
           )
-        )
-      ), catchError(() => of(forecastError({ id: 0 })))
+      ),
+      catchError(() => of(forecastError({ id: 0 })))
     )
   );
 
