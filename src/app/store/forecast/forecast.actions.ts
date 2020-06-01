@@ -1,6 +1,5 @@
 import { createAction, props } from '@ngrx/store';
 
-import { Coord } from '../weather/weather.reducer';
 import { ForecastResponse } from './forecast.reducer';
 
 export const LOAD_FORECAST = '[Forecast] Load';

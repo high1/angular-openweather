@@ -5,13 +5,14 @@ import { NgZone } from '@angular/core';
 import { ActivatedRoute, Router, UrlTree } from '@angular/router';
 
 import { ForecastGuardService } from './forecast.guard.service';
-import { cold } from 'jasmine-marbles';
+import { TestScheduler } from 'rxjs/testing';
 
 describe('ForecastGuardService', () => {
   let service: ForecastGuardService;
   let store: MockStore;
   let route: ActivatedRoute;
   let router: Router;
+  let scheduler: TestScheduler;
   const initialState = {
     weather: {
       current: [
@@ -39,6 +40,9 @@ describe('ForecastGuardService', () => {
     const originalNavigate = router.navigate;
     spyOn(router, 'navigate').and.callFake((...options) =>
       new NgZone({}).run(() => originalNavigate.apply(router, options)));
+    scheduler = new TestScheduler((actual, expected) => {
+      expect(actual).toEqual(expected);
+    });
   });
 
   it('should be created', () => {
@@ -46,7 +50,9 @@ describe('ForecastGuardService', () => {
   });
 
   it('should return false if there is no matching id in the store', () =>
-    expect(service.canActivate(route.snapshot)).toBeObservable(cold('b', { b: router.parseUrl('not-found') }))
+    scheduler.run(({ expectObservable }) =>
+      expectObservable(service.canActivate(route.snapshot)).toBe('a', { a: router.parseUrl('not-found')})
+    )
   );
 
   it('should return true if there is a matching id in the store', () => {
@@ -57,6 +63,8 @@ describe('ForecastGuardService', () => {
           ]
         }
       });
-    expect(service.canActivate(route.snapshot)).toBeObservable(cold('b', { b: true }));
+    scheduler.run(({ expectObservable }) =>
+        expectObservable(service.canActivate(route.snapshot)).toBe('b', { b: true })
+      );
   });
 });

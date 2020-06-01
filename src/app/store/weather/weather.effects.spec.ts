@@ -3,7 +3,7 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Observable, of } from 'rxjs';
-import { cold, hot } from 'jasmine-marbles';
+import { TestScheduler } from 'rxjs/testing';
 
 import { WeatherService } from '../../services/weather.service';
 import { WeatherEffects } from './weather.effects';
@@ -16,6 +16,7 @@ describe('Weather Effects', () => {
   let effects: WeatherEffects;
   let store: MockStore;
   let weatherServiceSpy: WeatherService;
+  let scheduler: TestScheduler;
 
   const initialState = {
     weather: {
@@ -38,6 +39,9 @@ describe('Weather Effects', () => {
     });
     effects = TestBed.inject(WeatherEffects);
     store = TestBed.inject(MockStore);
+    scheduler = new TestScheduler((actual, expected) => {
+      expect(actual).toEqual(expected);
+    });
   });
 
   beforeEach(() => {
@@ -55,9 +59,10 @@ describe('Weather Effects', () => {
         fetchTime: Date.now() + environment.apiInterval / 2
       }
     });
-    action$ = hot('-a', { a: loadWeather() });
-
-    expect(effects.loadingWeather$).toBeObservable(cold('-b', { b: noOp() }));
+    scheduler.run(({ cold, expectObservable }) => {
+      action$ = cold('-a', { a: loadWeather() });
+      expectObservable(effects.loadingWeather$).toBe('-b', { b: noOp() });
+    });
   });
 
   it('loadWeather effect should also dispatch noOp for interval smaller than predefined one', () => {
@@ -68,9 +73,10 @@ describe('Weather Effects', () => {
         fetchTime: Date.now() + environment.apiInterval / 2
       }
     });
-    action$ = hot('-a', { a: loadWeather() });
-
-    expect(effects.loadWeather$).toBeObservable(cold('-b', { b: noOp() }));
+    scheduler.run(({ cold, expectObservable }) => {
+      action$ = cold('-a', { a: loadWeather() });
+      expectObservable(effects.loadWeather$).toBe('-b', { b: noOp() });
+    });
   });
 
   it('should dispatch loadingWeather', () => {
@@ -81,9 +87,10 @@ describe('Weather Effects', () => {
         fetchTime: Date.now() - environment.apiInterval * 2
       }
     });
-    action$ = hot('-a', { a: loadWeather() });
-
-    expect(effects.loadingWeather$).toBeObservable(cold('-b', { b: loadingWeather() }));
+    scheduler.run(({ cold, expectObservable }) => {
+      action$ = cold('-a', { a: loadWeather() });
+      expectObservable(effects.loadingWeather$).toBe('-b', { b: loadingWeather() });
+    });
   });
 
   it('should dispatch weatherLoaded with appropriate service response', () => {
@@ -106,15 +113,16 @@ describe('Weather Effects', () => {
         fetchTime: Date.now() - environment.apiInterval * 2
       }
     });
-    action$ = hot('-a', { a: loadWeather() });
-    const expected = hot('-b', { b: weatherLoaded({ list: [{
-      main: {
-        temp_max: tempMax,
-        temp_min: tempMin,
-        temp_avg: (tempMax + tempMin) / 2 - toKelvin
-      }
-    }] } as unknown) });
-    expect(effects.loadWeather$).toBeObservable(expected);
+    scheduler.run(({ cold, expectObservable }) => {
+      action$ = cold('-a', { a: loadWeather() });
+      expectObservable(effects.loadWeather$).toBe('-b', { b: weatherLoaded({ list: [{
+        main: {
+          temp_max: tempMax,
+          temp_min: tempMin,
+          temp_avg: (tempMax + tempMin) / 2 - toKelvin
+        }
+      }] } as unknown ) });
+    });
   });
 
   it('should dispatch weatherError', () => {
@@ -124,8 +132,9 @@ describe('Weather Effects', () => {
         id: 1
       }]
     }));
-    action$ = hot('-a', { a: loadWeather() });
-    const expected = hot('-b', { b: weatherError() });
-    expect(effects.loadWeather$).toBeObservable(expected);
+    scheduler.run(({ cold, expectObservable }) => {
+      action$ = cold('-a', { a: loadWeather() });
+      expectObservable(effects.loadWeather$).toBe('-b', { b: weatherError() });
+    });
   });
 });

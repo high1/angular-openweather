@@ -3,7 +3,7 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Observable, of } from 'rxjs';
-import { cold, hot } from 'jasmine-marbles';
+import { TestScheduler } from 'rxjs/testing';
 
 import { WeatherService } from '../../services/weather.service';
 import { ForecastEffects } from './forecast.effects';
@@ -11,12 +11,14 @@ import { loadForecast, loadingForecast, forecastLoaded, forecastError } from './
 import { noOp } from '../weather/weather.actions';
 import { Action } from '@ngrx/store';
 import { environment } from '../../../environments/environment';
+import { act } from '@ngrx/effects';
 
 describe('Forecast Effects', () => {
   let action$: Observable<Action>;
   let effects: ForecastEffects;
   let store: MockStore;
   let weatherServiceSpy: WeatherService;
+  let scheduler: TestScheduler;
 
   const initialState = {
     forecast: {
@@ -37,6 +39,9 @@ describe('Forecast Effects', () => {
     });
     effects = TestBed.inject(ForecastEffects);
     store = TestBed.inject(MockStore);
+    scheduler = new TestScheduler((actual, expected) => {
+      expect(actual).toEqual(expected);
+    });
   });
 
   beforeEach(() => {
@@ -55,9 +60,10 @@ describe('Forecast Effects', () => {
         }
       }
     });
-    action$ = hot('-a', { a: loadForecast({ id: 1 }) });
-
-    expect(effects.loadingForecast$).toBeObservable(cold('-b', { b: noOp() }));
+    scheduler.run(({ cold, expectObservable}) => {
+      action$ = cold('-a', { a: loadForecast({ id: 1 })});
+      expectObservable(effects.loadingForecast$).toBe('-b', { b: noOp() });
+    });
   });
 
   it('loadForecast effect should also dispatch noOp for interval smaller than predefined one', () => {
@@ -81,9 +87,10 @@ describe('Forecast Effects', () => {
         }
       }
     });
-    action$ = hot('-a', { a: loadForecast({ id: 1 }) });
-
-    expect(effects.loadForecast$).toBeObservable(cold('-b', { b: noOp() }));
+    scheduler.run(({ cold, expectObservable }) => {
+      action$ = cold('--a', { a: loadForecast({ id: 1 }) });
+      expectObservable(effects.loadForecast$).toBe('--b', { b: noOp() });
+    });
   });
 
   it('should dispatch loadingForecast', () => {
@@ -96,9 +103,10 @@ describe('Forecast Effects', () => {
         }
       }
     });
-    action$ = hot('-a', { a: loadForecast({ id: 1 }) });
-
-    expect(effects.loadingForecast$).toBeObservable(cold('-b', { b: loadingForecast() }));
+    scheduler.run(({ cold, expectObservable }) => {
+      action$ = cold('-a', { a: loadForecast({ id: 1 }) });
+      expectObservable(effects.loadingForecast$).toBe('-b', { b: loadingForecast() });
+    });
   });
 
   it('should dispatch forecastLoaded with appropriate service response', () => {
@@ -129,18 +137,19 @@ describe('Forecast Effects', () => {
         }
       }
     });
-    action$ = hot('-a', { a: loadForecast({ id: 1 }) });
-    const expected = hot('-b', {
-      b: forecastLoaded({
-        id: 1,
-          hourly: [{
-            dt: baseTime.getTime(),
-            temp: 20
-          }]
-      } as unknown)
+    scheduler.run(({ cold, expectObservable }) => {
+      action$ = cold('-a', { a: loadForecast({ id: 1 }) });
+      expectObservable(effects.loadForecast$).toBe('-b', {
+        b: forecastLoaded({
+          id: 1,
+            hourly: [{
+              dt: baseTime.getTime(),
+              temp: 20
+            }]
+        } as unknown)
+      });
     });
-    expect(effects.loadForecast$).toBeObservable(expected);
   });
 
-  // TODO: error tests with jasmine-marbles or other framework
+  // TODO: marble error tests with rxjs/testing or other framework
 });
