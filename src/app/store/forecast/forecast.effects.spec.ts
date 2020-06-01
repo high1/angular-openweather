@@ -152,7 +152,7 @@ describe('Forecast Effects', () => {
     expect(weatherServiceSpy.getForecast).toHaveBeenCalled();
   });
 
-  it('should dispatch loadingForecast', () => {
+  it('should dispatch forecastError', () => {
     weatherServiceSpy.getForecast.and.throwError('');
     scheduler.run(({ cold, expectObservable }) => {
       action$ = cold('-a', { a: loadForecast({ id: 1 }) });
