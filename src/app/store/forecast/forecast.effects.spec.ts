@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
+import { Action } from '@ngrx/store';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Observable, of } from 'rxjs';
@@ -9,7 +10,6 @@ import { WeatherService } from '../../services/weather.service';
 import { ForecastEffects } from './forecast.effects';
 import { loadForecast, loadingForecast, forecastLoaded, forecastError } from './forecast.actions';
 import { noOp } from '../weather/weather.actions';
-import { Action } from '@ngrx/store';
 import { environment } from '../../../environments/environment';
 
 describe('Forecast Effects', () => {

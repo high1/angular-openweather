@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
+import { Action } from '@ngrx/store';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Observable, of } from 'rxjs';
@@ -8,7 +9,6 @@ import { TestScheduler } from 'rxjs/testing';
 import { WeatherService } from '../../services/weather.service';
 import { WeatherEffects } from './weather.effects';
 import { loadWeather, loadingWeather, weatherLoaded, noOp, weatherError } from './weather.actions';
-import { Action } from '@ngrx/store';
 import { environment } from '../../../environments/environment';
 
 describe('Weather Effects', () => {
@@ -49,7 +49,6 @@ describe('Weather Effects', () => {
   beforeEach(() => {
     const baseTime = new Date(2020, 1, 1);
     jasmine.clock().mockDate(baseTime);
-    // weatherServiceSpy = TestBed.inject(WeatherService);
     weatherServiceSpy.getCurrentWeather.and.returnValue(of({ cnt: 0, list: [] }));
   });
 
@@ -123,7 +122,7 @@ describe('Weather Effects', () => {
           temp_min: tempMin,
           temp_avg: (tempMax + tempMin) / 2 - toKelvin
         }
-      }] } as unknown ) });
+      }] } as unknown) });
     });
   });
 
