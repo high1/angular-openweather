@@ -23,7 +23,7 @@ export class CurrentWeatherComponent implements OnInit {
   }
 
   loadWeather(reload = false) {
-    this.store.dispatch(loadWeather(reload));
+    this.store.dispatch(loadWeather({ reload }));
   }
 
 }

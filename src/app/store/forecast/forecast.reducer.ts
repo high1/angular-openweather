@@ -1,7 +1,8 @@
 import { Action, createReducer, on } from '@ngrx/store';
 
-import { forecastLoaded, forecastError, loadingForecast } from './forecast.actions';
+import { forecastLoaded, forecastError, loadForecast } from './forecast.actions';
 import { WeatherDescription } from '../weather/weather.reducer';
+import { noOp } from '../weather/weather.actions';
 
 export const key = 'forecast';
 
@@ -31,10 +32,18 @@ export interface ForecastState extends Record<number, { error?: boolean, fetchTi
   loading: boolean;
 }
 
-export const initialState: any = { loading: false };
+export const initialState: ForecastState = { loading: false };
 
 const forecastReducer = createReducer(
   initialState,
+  on(noOp, (state) => ({
+    ...state,
+    loading: false
+  })),
+  on(loadForecast, (state) => ({
+    ...state,
+    loading: true
+  })),
   on(forecastLoaded, (state, { id, hourly }: Partial<ForecastResponse>) => ({
     ...state,
     loading: false,
@@ -50,10 +59,6 @@ const forecastReducer = createReducer(
       hourly: null,
       error: true
     }
-  })),
-  on(loadingForecast, (state) => ({
-    ...state,
-    loading: true
   }))
 );
 

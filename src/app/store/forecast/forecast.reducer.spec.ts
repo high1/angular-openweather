@@ -1,5 +1,5 @@
 import { initialState, reducer as ForecastReducer } from './forecast.reducer';
-import { loadingForecast, forecastLoaded, forecastError } from './forecast.actions';
+import { forecastLoaded, forecastError } from './forecast.actions';
 
 describe('ForecastReducer', () => {
   const payload = {
@@ -14,12 +14,6 @@ describe('ForecastReducer', () => {
     expect(ForecastReducer(undefined, { type: undefined })).toBe(initialState)
   );
 
-  it('loadingForecast action should set loading to true', () =>
-      expect(ForecastReducer(undefined, loadingForecast)).toEqual({
-        ...initialState,
-        loading: true
-      })
-    );
   it('forecastLoaded action should set current and fetchTime', () => {
     const baseTime = new Date(2020, 1, 1);
     jasmine.clock().mockDate(baseTime);
@@ -31,6 +25,7 @@ describe('ForecastReducer', () => {
       }
     });
   });
+
   it('weatherError should set error', () => {
     expect(ForecastReducer({ ...initialState }, forecastError({ id: payload.id }))).toEqual({
       loading: false,

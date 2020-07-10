@@ -8,7 +8,7 @@ import { TestScheduler } from 'rxjs/testing';
 
 import { WeatherService } from '../../services/weather.service';
 import { ForecastEffects } from './forecast.effects';
-import { loadForecast, loadingForecast, forecastLoaded, forecastError } from './forecast.actions';
+import { loadForecast, forecastLoaded, forecastError } from './forecast.actions';
 import { noOp } from '../weather/weather.actions';
 import { environment } from '../../../environments/environment';
 
@@ -49,22 +49,6 @@ describe('Forecast Effects', () => {
     jasmine.clock().mockDate(baseTime);
   });
 
-  it('loadingForecast effect should dispatch noOp for interval smaller than predefined one', () => {
-    store.setState({
-      ...initialState,
-      forecast: {
-        ...initialState.forecast,
-        1: {
-          fetchTime: Date.now() + environment.apiInterval / 2
-        }
-      }
-    });
-    scheduler.run(({ cold, expectObservable}) => {
-      action$ = cold('-a', { a: loadForecast({ id: 1 })});
-      expectObservable(effects.loadingForecast$).toBe('-b', { b: noOp() });
-    });
-  });
-
   it('loadForecast effect should also dispatch noOp for interval smaller than predefined one', () => {
     store.setState({
       ...initialState,
@@ -91,22 +75,6 @@ describe('Forecast Effects', () => {
       expectObservable(effects.loadForecast$).toBe('--b', { b: noOp() });
     });
     expect(weatherServiceSpy.getForecast).not.toHaveBeenCalled();
-  });
-
-  it('should dispatch loadingForecast', () => {
-    store.setState({
-      ...initialState,
-      forecast: {
-        ...initialState.forecast,
-        1: {
-          fetchTime: Date.now() - environment.apiInterval * 2
-        }
-      }
-    });
-    scheduler.run(({ cold, expectObservable }) => {
-      action$ = cold('-a', { a: loadForecast({ id: 1 }) });
-      expectObservable(effects.loadingForecast$).toBe('-b', { b: loadingForecast() });
-    });
   });
 
   it('should dispatch forecastLoaded with appropriate service response', () => {

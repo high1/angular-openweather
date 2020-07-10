@@ -1,15 +1,9 @@
 import { initialState, reducer as WeatherReducer } from './weather.reducer';
-import { loadingWeather, weatherLoaded, weatherError } from './weather.actions';
+import { weatherLoaded, weatherError } from './weather.actions';
 
 describe('WeatherReducer', () => {
   it('undefined action return the default state', () =>
     expect(WeatherReducer(undefined, { type: undefined })).toBe(initialState)
-  );
-  it('loadingWeather action should set loading to true', () =>
-    expect(WeatherReducer(undefined, loadingWeather)).toEqual({
-      ...initialState,
-      loading: true
-    })
   );
   it('weatherLoaded action should set current and fetchTime', () => {
     const baseTime = new Date(2020, 1, 1);

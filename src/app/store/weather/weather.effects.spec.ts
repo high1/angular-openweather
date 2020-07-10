@@ -8,7 +8,7 @@ import { TestScheduler } from 'rxjs/testing';
 
 import { WeatherService } from '../../services/weather.service';
 import { WeatherEffects } from './weather.effects';
-import { loadWeather, loadingWeather, weatherLoaded, noOp, weatherError } from './weather.actions';
+import { loadWeather, weatherLoaded, noOp, weatherError } from './weather.actions';
 import { environment } from '../../../environments/environment';
 
 describe('Weather Effects', () => {
@@ -52,20 +52,6 @@ describe('Weather Effects', () => {
     weatherServiceSpy.getCurrentWeather.and.returnValue(of({ cnt: 0, list: [] }));
   });
 
-  it('loadingWeather effect should dispatch noOp for interval smaller than predefined one', () => {
-    store.setState({
-      ...initialState,
-      weather: {
-        ...initialState.weather,
-        fetchTime: Date.now() + environment.apiInterval / 2
-      }
-    });
-    scheduler.run(({ cold, expectObservable }) => {
-      action$ = cold('-a', { a: loadWeather() });
-      expectObservable(effects.loadingWeather$).toBe('-b', { b: noOp() });
-    });
-  });
-
   it('loadWeather effect should also dispatch noOp for interval smaller than predefined one', () => {
     store.setState({
       ...initialState,
@@ -77,20 +63,6 @@ describe('Weather Effects', () => {
     scheduler.run(({ cold, expectObservable }) => {
       action$ = cold('-a', { a: loadWeather() });
       expectObservable(effects.loadWeather$).toBe('-b', { b: noOp() });
-    });
-  });
-
-  it('should dispatch loadingWeather', () => {
-    store.setState({
-      ...initialState,
-      weather: {
-        ...initialState.weather,
-        fetchTime: Date.now() - environment.apiInterval * 2
-      }
-    });
-    scheduler.run(({ cold, expectObservable }) => {
-      action$ = cold('-a', { a: loadWeather() });
-      expectObservable(effects.loadingWeather$).toBe('-b', { b: loadingWeather() });
     });
   });
 

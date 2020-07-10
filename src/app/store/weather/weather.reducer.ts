@@ -1,6 +1,6 @@
 import { Action, createReducer, on } from '@ngrx/store';
 
-import { loadingWeather, weatherLoaded, weatherError } from './weather.actions';
+import { loadWeather, weatherLoaded, weatherError, noOp } from './weather.actions';
 
 export const key = 'weather';
 
@@ -63,8 +63,12 @@ export const initialState: WeatherState = { current: undefined, loading: false }
 
 const weatherReducer = createReducer(
   initialState,
-  on(loadingWeather, ({ current }) => ({
-    current,
+  on(noOp, (state) => ({
+    ...state,
+    loading: false
+  })),
+  on(loadWeather, (state) => ({
+    ...state,
     loading: true,
   })),
   on(weatherLoaded, (_, { list: current }) => ({

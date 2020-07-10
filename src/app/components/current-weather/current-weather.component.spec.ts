@@ -95,7 +95,7 @@ describe('CurrentWeatherComponent', () => {
     createFixture();
     component = fixture.componentInstance;
     component.loadWeather();
-    expect(store.dispatch).toHaveBeenCalledWith(loadWeather(false));
+    expect(store.dispatch).toHaveBeenCalledWith(loadWeather());
   });
 
   it('should dispatch on loadWeather with true payload', () => {
@@ -103,6 +103,6 @@ describe('CurrentWeatherComponent', () => {
     createFixture();
     component = fixture.componentInstance;
     component.loadWeather(true);
-    expect(store.dispatch).toHaveBeenCalledWith(loadWeather(true));
+    expect(store.dispatch).toHaveBeenCalledWith(loadWeather({ reload: true }));
   });
 });

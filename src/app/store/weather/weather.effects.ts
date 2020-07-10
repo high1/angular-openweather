@@ -4,32 +4,22 @@ import { of } from 'rxjs';
 import { catchError, concatMap, map, mergeMap, withLatestFrom } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 
-import { loadWeather, loadingWeather, noOp, weatherLoaded, weatherError } from './weather.actions';
+import { loadWeather, noOp, weatherLoaded, weatherError } from './weather.actions';
 import { WeatherResponse } from './weather.reducer';
 import { WeatherService } from '../../services/weather.service';
+import { shouldLoad } from '../common';
 import { State } from '../state';
-import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class WeatherEffects {
-  loadingWeather$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(loadWeather),
-      concatMap(action => of(action).pipe(
-        withLatestFrom(this.store.select((state: State) => state.weather.fetchTime)),
-      )),
-      mergeMap(([{ reload }, fetchTime]) => this.shouldNotLoadWeather(fetchTime) && !reload ? of(noOp()) : of(loadingWeather())),
-    )
-  );
-
   loadWeather$ = createEffect(() =>
     this.actions$.pipe(
       ofType(loadWeather),
       concatMap(action => of(action).pipe(
         withLatestFrom(this.store.select((state: State) => state.weather.fetchTime)),
       )),
-      mergeMap(([{ reload }, fetchTime]) => this.shouldNotLoadWeather(fetchTime) && !reload
-        ? of(noOp()) : this.weatherService.getCurrentWeather()
+      mergeMap(([{ reload, now }, fetchTime]) => shouldLoad({ reload, now, fetchTime })
+        ? this.weatherService.getCurrentWeather()
           .pipe(
             map(({ list }: WeatherResponse) => weatherLoaded({
               list: list.map(item => ({
@@ -41,12 +31,10 @@ export class WeatherEffects {
               }))
             })),
             catchError(() => of(weatherError()))
-          )
+          ) : of(noOp())
       )
     )
   );
-
-  shouldNotLoadWeather = (fetchTime: number) => fetchTime && (Date.now() - fetchTime <= environment.apiInterval);
 
   constructor(
     private actions$: Actions,

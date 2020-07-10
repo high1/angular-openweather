@@ -1,16 +1,15 @@
-import { LOAD_FORECAST, LOADING_FORECAST, FORECAST_LOADED, FORECAST_ERROR,
-  loadForecast, loadingForecast, forecastLoaded, forecastError } from './forecast.actions';
+import { LOAD_FORECAST, FORECAST_LOADED, FORECAST_ERROR,
+  loadForecast, forecastLoaded, forecastError } from './forecast.actions';
 
 describe('noOp', () => {
-
+  const baseTime = new Date(2020, 1, 1);
+  beforeAll(() => {
+    jasmine.clock().mockDate(baseTime);
+  }),
   it('should create a loadWeather action with payload', () => {
     const payload = { id: 1, reload: true };
-    expect(loadForecast(payload)).toEqual({ type: LOAD_FORECAST, ...payload });
+    expect(loadForecast(payload)).toEqual({ type: LOAD_FORECAST, ...payload, now: baseTime.getTime() });
   });
-
-  it('should create a loadingWeather action', () =>
-    expect(loadingForecast()).toEqual({ type: LOADING_FORECAST })
-  );
 
   it('should create a weatherLoaded action with payload', () => {
     const payload = {

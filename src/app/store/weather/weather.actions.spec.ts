@@ -1,17 +1,17 @@
-import { NOOP, LOAD_WEATHER, LOADING_WEATHER, WEATHER_LOADED, WEATHER_ERROR,
-  noOp, loadWeather, loadingWeather, weatherLoaded, weatherError } from './weather.actions';
+import { NOOP, LOAD_WEATHER, WEATHER_LOADED, WEATHER_ERROR,
+  noOp, loadWeather, weatherLoaded, weatherError } from './weather.actions';
 
 describe('noOp', () => {
+  const baseTime = new Date(2020, 1, 1);
+  beforeAll(() => {
+    jasmine.clock().mockDate(baseTime);
+  }),
   it('should create a noOp action', () =>
     expect(noOp()).toEqual({ type: NOOP })
   );
 
   it('should create a loadWeather action with payload', () =>
-    expect(loadWeather(true)).toEqual({ type: LOAD_WEATHER, reload: true })
-  );
-
-  it('should create a loadingWeather action', () =>
-    expect(loadingWeather()).toEqual({ type: LOADING_WEATHER })
+    expect(loadWeather({ reload: true })).toEqual({ type: LOAD_WEATHER, reload: true, now: baseTime.getTime() })
   );
 
   it('should create a weatherLoaded action with payload', () => {

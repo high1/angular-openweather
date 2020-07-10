@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { map, mergeMap, catchError, concatMap, switchMap, withLatestFrom } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
 
-import { loadForecast, forecastLoaded, forecastError, loadingForecast } from './forecast.actions';
+import { loadForecast, forecastLoaded, forecastError } from './forecast.actions';
+import { shouldLoad } from '../common';
 import { noOp } from '../weather/weather.actions';
 import { WeatherService } from '../../services/weather.service';
 import { State } from '../state';
-import { Store } from '@ngrx/store';
 import { ForecastResponse } from './forecast.reducer';
-import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class ForecastEffects {
@@ -20,20 +20,6 @@ export class ForecastEffects {
     private store: Store,
   ) { }
 
-  loadingForecast$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(loadForecast),
-      concatMap(action => of(action).pipe(
-        withLatestFrom(this.store.select((state: State) => state.forecast[action.id]?.fetchTime)
-        ),
-      )),
-      mergeMap(([{ reload }, fetchTime]) =>
-        !reload && this.shouldNotLoadForecast(fetchTime)
-          ? of(noOp()) : of(loadingForecast())
-      )
-    )
-  );
-
   loadForecast$ = createEffect(() =>
     this.actions$.pipe(
       ofType(loadForecast),
@@ -43,16 +29,13 @@ export class ForecastEffects {
           ...state.weather.current.find(item => item.id === action.id).coord
         }))),
       )),
-      switchMap(([{ id, reload }, { fetchTime, lat, lon }]) =>
-        !reload && this.shouldNotLoadForecast(fetchTime)
-          ? of(noOp()) : this.weatherService.getForecast({ lat, lon }).pipe(
+      switchMap(([{ id, reload, now }, { fetchTime, lat, lon }]) =>
+        shouldLoad({ reload, now, fetchTime })
+          ? this.weatherService.getForecast({ lat, lon }).pipe(
             map((forecast: ForecastResponse) => forecastLoaded({ ...forecast, id })),
             catchError(() => of(forecastError({ id })))
-          )
-      ),
+          ) : of(noOp())),
       catchError(() => of(forecastError({ id: 0 })))
     )
   );
-
-  shouldNotLoadForecast = (fetchTime: number) => fetchTime && Date.now() - fetchTime <= environment.apiInterval;
 }
