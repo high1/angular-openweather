@@ -6,7 +6,7 @@ table > tbody > tr > td {
   font-size: x-large;
   font-weight: bold;
   flex-shrink: 0;
-  padding: 0 15px;
+  /* padding: 0 15px; */
   max-height: 36px;
 }
 
