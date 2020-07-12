@@ -6,18 +6,8 @@ table > tbody > tr > td {
   font-size: x-large;
   font-weight: bold;
   flex-shrink: 0;
-  height: 40px;
   padding: 0 15px;
-}
-
-.header .back,
-.header .dummy,
-.subrow .temp {
-  flex-grow: 0;
-}
-
-.header .dummy {
-  color: transparent;
+  max-height: 36px;
 }
 
 .content {

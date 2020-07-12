@@ -3,13 +3,16 @@
   <ng-container *ngIf="(forecast$ | async).forecast as forecast; else errorBlock">
     <div class="container d-flex flex-column">
       <div class="header row d-flex justify-content-between">
-        <a class="back" routerLink="/">
-          <i class="fas fa-chevron-left"></i>
-        </a>
-        <p class="name">
-          {{(name$ | async).toUpperCase()}}
-        </p>
-        <i class="dummy fas fa-backward"></i>
+          <div class="col-sm-1">
+            <a class="back" routerLink="/">
+              <i class="fas fa-chevron-left"></i>
+            </a>
+          </div>
+          <div class="col-sm d-flex justify-content-center">
+            {{(name$ | async).toUpperCase()}}
+          </div>
+          <div class="col-sm-1">
+        </div>
       </div>
       <div class="content row justify-content-around overflow-auto" *ngIf="forecast.hourly as forecasts">
         <div class="sub-container col-md-6 d-flex justify-content-center align-items-center"
