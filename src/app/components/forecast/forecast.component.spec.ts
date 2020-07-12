@@ -119,7 +119,7 @@ describe('ForecastComponent', () => {
 
   it('should have name set', () => {
     createFixture();
-    const paragrah = fixture.debugElement.query(By.css('.header .name'));
+    const paragrah = fixture.debugElement.query(By.css('.header .col-sm'));
     expect(paragrah.nativeElement.textContent.trim()).toBe(name.toUpperCase());
   });
 
