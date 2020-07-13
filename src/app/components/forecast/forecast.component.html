@@ -15,20 +15,20 @@
         </div>
       </div>
       <div class="content row justify-content-around overflow-auto" *ngIf="forecast.hourly as forecasts">
-        <div class="sub-container col-md-6 d-flex justify-content-center align-items-center"
+        <div class="sub-container col-lg-6 d-flex"
           *ngFor="let forecast of forecasts">
-          <div class="date d-flex flex-column justify-content-center align-items-start">
+          <div class="date col-sm-2 d-flex flex-column align-items-start">
             <span class="sup">{{getHour(forecast.dt)}}</span>
             <span class="sub">{{getDayMonth(forecast.dt)}}</span>
           </div>
-          <div class="temperature d-flex justify-content-start align-items-center">
+          <div class="temperature col-sm d-flex justify-content-start align-items-center">
             {{forecast.temp | number:'1.0-0'}}°
           </div>
-          <div class="description d-flex justify-content-start align-items-center">
+          <div class="description col-sm-8 d-flex justify-content-start align-items-center">
             <img src="https://openweathermap.org/img/wn/{{forecast.weather[0].icon}}.png" alt="weather image">
             {{forecast.weather[0].description}}
           </div>
-          <div class="speed d-flex justify-content-end align-items-center">
+          <div class="speed col-sm d-flex justify-content-end align-items-center">
             {{forecast.wind_speed | number:'1.1-1' }}<sup>m</sup>/<sub>s</sub>
           </div>
         </div>

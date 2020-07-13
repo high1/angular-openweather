@@ -6,7 +6,6 @@ table > tbody > tr > td {
   font-size: x-large;
   font-weight: bold;
   flex-shrink: 0;
-  /* padding: 0 15px; */
   max-height: 36px;
 }
 
@@ -15,7 +14,7 @@ table > tbody > tr > td {
 }
 
 .container {
-  height: 100%;
+  height: calc(100% - 36px);
 }
 
 .sub-container {
@@ -23,10 +22,9 @@ table > tbody > tr > td {
   border: 1px solid gainsboro;
   border-radius: 5px;
   margin: 1px 0;
-  height: 50px;
 }
 
-@media only screen and (min-width: 992px) {
+@media only screen and (min-width: 991.98px) {
   .sub-container {
     max-width: calc(50% - 2px);
   }
@@ -34,11 +32,6 @@ table > tbody > tr > td {
 
 .sub-container:nth-child(even) {
   background-color: gainsboro;
-}
-
-.date {
-  flex-grow: 0;
-  flex-basis: 50px;
 }
 
 .date .sup {
@@ -53,12 +46,10 @@ table > tbody > tr > td {
 .temperature {
   font-size: x-large;
   font-weight: 300;
-  flex-basis: 30px;
 }
 
 .description {
-  flex-grow: 1;
-  margin-left: 2rem;
+  padding-left: 2rem;
 }
 
 .description img {
