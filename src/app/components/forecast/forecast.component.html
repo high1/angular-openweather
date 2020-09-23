@@ -3,32 +3,32 @@
   <ng-container *ngIf="(forecast$ | async).forecast as forecast; else errorBlock">
     <div class="container d-flex flex-column">
       <div class="header row d-flex justify-content-between">
-          <div class="col-sm-1">
+          <div class="col-1">
             <a class="back" routerLink="/">
               <i class="fas fa-chevron-left"></i>
             </a>
           </div>
-          <div class="col-sm d-flex justify-content-center">
+          <div class="col d-flex justify-content-center">
             {{(name$ | async).toUpperCase()}}
           </div>
-          <div class="col-sm-1">
+          <div class="col-1">
         </div>
       </div>
       <div class="content row justify-content-around overflow-auto" *ngIf="forecast.hourly as forecasts">
         <div class="sub-container col-lg-6 d-flex"
           *ngFor="let forecast of forecasts">
-          <div class="date col-sm-2 d-flex flex-column align-items-start">
+          <div class="date col-2 d-flex flex-column align-items-start">
             <span class="sup">{{getHour(forecast.dt)}}</span>
             <span class="sub">{{getDayMonth(forecast.dt)}}</span>
           </div>
-          <div class="temperature col-sm d-flex justify-content-start align-items-center">
+          <div class="temperature col d-flex justify-content-start align-items-center">
             {{forecast.temp | number:'1.0-0'}}°
           </div>
-          <div class="description col-sm-8 d-flex justify-content-start align-items-center">
+          <div class="description col-8 d-flex justify-content-start align-items-center">
             <img src="https://openweathermap.org/img/wn/{{forecast.weather[0].icon}}.png" alt="weather image">
             {{forecast.weather[0].description}}
           </div>
-          <div class="speed col-sm d-flex justify-content-end align-items-center">
+          <div class="speed col d-flex justify-content-end align-items-center">
             {{forecast.wind_speed | number:'1.1-1' }}<sup>m</sup>/<sub>s</sub>
           </div>
         </div>
