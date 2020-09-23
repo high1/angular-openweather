@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute } from '@angular/router';
@@ -66,7 +66,7 @@ describe('ForecastComponent', () => {
     }
   };
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ForecastComponent, LoaderComponent],
       providers: [
@@ -119,8 +119,8 @@ describe('ForecastComponent', () => {
 
   it('should have name set', () => {
     createFixture();
-    const paragrah = fixture.debugElement.query(By.css('.header .col-sm'));
-    expect(paragrah.nativeElement.textContent.trim()).toBe(name.toUpperCase());
+    const paragraph = fixture.debugElement.query(By.css('.header .col'));
+    expect(paragraph.nativeElement.textContent.trim()).toBe(name.toUpperCase());
   });
 
   it('should have three hourly rows', () => {
