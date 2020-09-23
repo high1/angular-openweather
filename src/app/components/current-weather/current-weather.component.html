@@ -7,8 +7,11 @@
           <div class="location col d-flex align-items-center">
             <span class="name">{{item.name}}</span>
           </div>
-          <div class="icon col d-flex justify-content-center align-items-center">
+          <div class="icon col d-none d-md-flex justify-content-center align-items-center">
             <img src="https://openweathermap.org/img/wn/{{item.weather[0].icon}}@2x.png" alt="current weather">
+          </div>
+          <div class="icon col d-flex d-md-none justify-content-center align-items-center">
+            <img src="https://openweathermap.org/img/wn/{{item.weather[0].icon}}.png" alt="current weather">
           </div>
           <div class="current col d-flex justify-content-around align-items-center">
             <span class="average">{{item.main.temp_avg | number:'1.0-0'}}°</span>

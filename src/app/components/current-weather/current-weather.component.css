@@ -17,20 +17,22 @@
 }
 
 .location {
-  font-size: larger;
-  margin-left: 0;
-}
-
-@media only screen and (min-width: 576px) {
-  .location {
-    margin-left: 1rem;
-  }
+  overflow: hidden;
+  text-overflow: clip;
 }
 
 @media only screen and (min-width: 768px) {
   .location {
     font-size: x-large;
-    margin-left: 2rem;
+  }
+  .current .average {
+    font-size: xx-large;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .current .average {
+    font-size: larger;
   }
 }
 
@@ -40,36 +42,23 @@
 }
 
 .location .name {
-  /* font-size: x-large; */
   font-weight: bold;
   text-transform: uppercase;
-  margin-right: 1rem;
 }
-
 
 .icon img {
   filter: drop-shadow(1px 1px 1px #222);
 }
 
 .current {
-  margin-right: 0;
-}
-
-.current .average, .current .main {
   white-space: nowrap;
 }
 
 .current .average {
-  font-size: xx-large;
   font-weight: 300;
 }
 
 .current .main {
   font-size: larger;
   text-transform: lowercase;
-  margin: 0 .7rem;
-}
-
-.fas {
-  margin-right: .2rem;
 }
